@@ -80,11 +80,12 @@ func setup() error {
 	return nil
 }
 
-func create(ctx context.Context, client api.AgentClient, s *smbios.Smbios) (*api.CreateServerResponse, error) {
+func create(ctx context.Context, client api.AgentClient, s *smbios.SMBIOS) (*api.CreateServerResponse, error) {
 	uuid, err := s.SystemInformation().UUID()
 	if err != nil {
 		return nil, err
 	}
+	log.Printf("UUID: %s", uuid)
 
 	req := &api.CreateServerRequest{
 		SystemInformation: &api.SystemInformation{
@@ -126,7 +127,7 @@ func create(ctx context.Context, client api.AgentClient, s *smbios.Smbios) (*api
 	return resp, err
 }
 
-func wipe(ctx context.Context, client api.AgentClient, s *smbios.Smbios) error {
+func wipe(ctx context.Context, client api.AgentClient, s *smbios.SMBIOS) error {
 	uuid, err := s.SystemInformation().UUID()
 	if err != nil {
 		return err
@@ -145,7 +146,7 @@ func wipe(ctx context.Context, client api.AgentClient, s *smbios.Smbios) error {
 	})
 }
 
-func reconcileIPs(ctx context.Context, client api.AgentClient, s *smbios.Smbios, ips []net.IP) error {
+func reconcileIPs(ctx context.Context, client api.AgentClient, s *smbios.SMBIOS, ips []net.IP) error {
 	uuid, err := s.SystemInformation().UUID()
 	if err != nil {
 		return err
@@ -231,6 +232,8 @@ func mainFunc() error {
 	if err != nil {
 		return err
 	}
+
+	log.Printf("Found SMBIOS v%d.%d.%d", s.Version.Major, s.Version.Minor, s.Version.Revision)
 
 	createResp, err := create(ctx, client, s)
 	if err != nil {

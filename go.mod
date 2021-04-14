@@ -40,3 +40,5 @@ require (
 )
 
 replace sigs.k8s.io/cluster-api v0.3.12 => sigs.k8s.io/cluster-api v0.3.9
+
+replace github.com/talos-systems/go-smbios => github.com/bnason/go-smbios v0.0.0-20210414170150-3bb7f10d9cc3
